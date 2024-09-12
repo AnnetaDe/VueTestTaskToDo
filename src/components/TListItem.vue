@@ -31,8 +31,11 @@ function openModalEdit() {
     <TButton @click="completeTask">Completed</TButton>
     <p>Favorite: {{ task.isLiked ? 'Yes' : 'No' }}</p>
     <TButton @click="likeTask">Like</TButton>
-    <TButton @click="openModalEdit">Edit</TButton>
-    <TButton @click="deleteTask">Delete</TButton>
+
+    <div class="editDelWrapper">
+      <TButton class="controlsBtn" @click="openModalEdit">Edit</TButton>
+      <TButton class="controlsBtn" @click="deleteTask">Delete</TButton>
+    </div>
   </li>
 </template>
 
@@ -42,5 +45,16 @@ function openModalEdit() {
   padding: 10px;
   border-radius: 5px;
   box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.2);
+}
+.editDelWrapper {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+}
+.controlsBtn {
+  background-color: #55404086;
+  color: #f6f5f5;
+  width: 100px;
+  padding: 12px 18px;
 }
 </style>
