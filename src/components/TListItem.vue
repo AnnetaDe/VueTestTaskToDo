@@ -35,3 +35,12 @@ function openModalEdit() {
     <TButton @click="deleteTask">Delete</TButton>
   </li>
 </template>
+
+<style scoped>
+.tlistitem {
+  background-color: #f6f6f6;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.2);
+}
+</style>

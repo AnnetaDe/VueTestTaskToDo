@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import TListItem from './TListItem.vue'
 import TButton from './TButton.vue'
 import TModal from './TModal.vue'
+import TModalForm from './TModalForm.vue'
 
 const toDOList = ref([
   { id: 1, name: 'Task 1', description: 'dosmthing0', isDone: false, isLiked: false },
@@ -73,13 +74,16 @@ function handleSave(task) {
       />
     </ul>
     <TButton @click="handleAddTask">Add New Task</TButton>
-    <TModal v-if="isOpen" @close="closeModal"> </TModal>
+    <TModal v-if="isOpen" @close="closeModal">
+      <TModalForm @save="handleSave" :task="selectedTask" />
+    </TModal>
   </div>
 </template>
 
 <style scoped>
 .tlist {
-  background-color: #9f91a3;
+  background-color: #953232;
+  border-radius: 2px;
   padding: 10px;
   display: grid;
   gap: 10px;

@@ -13,7 +13,7 @@ function handleClickInside(event) {
   <Teleport to="body">
     <div class="tmodalBackdrop" @click="handleClose">
       <div class="tmodalContent" @click="handleClickInside">
-        <TButton @click="handleClose">Close</TButton>
+        <TButton @click="handleClose">X</TButton>
         <slot></slot>
       </div>
     </div>
@@ -21,7 +21,7 @@ function handleClickInside(event) {
 </template>
 
 <style scoped>
-.modalBackdrop {
+.tmodalBackdrop {
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
@@ -33,8 +33,10 @@ function handleClickInside(event) {
   align-items: center;
 }
 .tmodalContent {
-  background-color: #c2168b;
-  padding: 10px;
-  width: 40%;
+  background-color: #f6f6f6;
+  padding: 16px;
+  width: 30%;
+  border-radius: 5px;
+  box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.2);
 }
 </style>
