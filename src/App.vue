@@ -1,10 +1,20 @@
 <script setup>
+import TList from './components/TList.vue'
 import HomeView from './views/HomeView.vue'
+import { useTaskStore } from '@/stores/taskStore'
+import { onMounted } from 'vue'
+const taskStore = useTaskStore()
+const { tasks, loading, error, fetchTasks, addNewTask, updateTask, deleteTask } = taskStore
+
+onMounted(() => {
+  fetchTasks()
+})
 </script>
 
 <template>
   <header>header</header>
   <HomeView />
+  <!-- <TList /> -->
 </template>
 
 <style scoped>

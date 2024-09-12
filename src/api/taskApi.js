@@ -14,11 +14,11 @@ export const getTasks = async () => {
 export const addTask = async (task) => {
   try {
     const response = await tasksApi.post('/todo', task)
-
     console.log('posted', response.data)
     return response.data
   } catch (error) {
     console.error(error)
+    throw error
   }
 }
 
@@ -30,6 +30,7 @@ export const updateTask = async (task) => {
     return response.data
   } catch (error) {
     console.error(error)
+    throw error
   }
 }
 
@@ -41,5 +42,6 @@ export const deleteTask = async (id) => {
     return response.data
   } catch (error) {
     console.error(error)
+    throw error
   }
 }
