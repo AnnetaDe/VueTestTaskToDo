@@ -4,12 +4,19 @@ import TListItem from './TListItem.vue'
 import TButton from './TButton.vue'
 import TModal from './TModal.vue'
 import TModalForm from './TModalForm.vue'
+import { getTasks } from '../api/taskApi'
+import { useTaskStore } from '@/stores/taskStore'
 
-const toDOList = ref([
-  { id: 1, name: 'Task 1', description: 'dosmthing0', isDone: false, isLiked: false },
-  { id: 2, name: 'Task 2', description: 'dosmthing1', isDone: false, isLiked: false },
-  { id: 3, name: 'Task 3', description: 'dosmthing2', isDone: false, isLiked: false }
-])
+const taskStore = useTaskStore()
+const { tasks, loading, error, fetchTasks, addNewTask, updateTask, deleteTask } = taskStore
+fetchTasks()
+console.log(tasks)
+addNewTask({ name: 'Task 4', description: 'dosmthing3', isDone: false, isLiked: false })
+updateTask({ id: 1, name: 'Task 1', description: 'updated', isDone: false, isLiked: false })
+// deleteTask(2)
+
+const toDOList = ref(tasks)
+console.log(toDOList)
 
 const isOpen = ref(false)
 const selectedTask = ref(null)
