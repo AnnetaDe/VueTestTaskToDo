@@ -1,24 +1,19 @@
 <script setup>
-import TList from './components/TList.vue'
-import HomeView from './views/HomeView.vue'
-import { useTaskStore } from '@/stores/taskStore'
 import { onMounted } from 'vue'
-const taskStore = useTaskStore()
-const { tasks, loading, error, fetchTasks, addNewTask, updateTask, deleteTask } = taskStore
+import { useTaskStore } from './stores/taskStore'
 
+const taskStore = useTaskStore()
 onMounted(() => {
-  fetchTasks()
+  taskStore.fetchTasks()
 })
 </script>
 
 <template>
-  <header>header</header>
-  <HomeView />
-  <!-- <TList /> -->
+  <router-view />
 </template>
 
 <style scoped>
-header {
+/* header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -69,5 +64,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
+} */
 </style>

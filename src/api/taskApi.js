@@ -1,15 +1,15 @@
 import { tasksApi } from './config'
 // const baseURL = 'https://666867aff53957909ff7e50c.mockapi.io/'
 
-export const getTasks = async () => {
-  try {
-    const response = await tasksApi.get('/todo')
-    console.log(response.data)
-    return response.data
-  } catch (error) {
-    console.error(error)
-  }
-}
+// export const getTasks = async () => {
+//   try {
+//     const response = await tasksApi.get('/todo')
+//     console.log(response.data)
+//     return response.data
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
 
 export const addTask = async (task) => {
   try {

@@ -6,15 +6,10 @@ import TModal from './TModal.vue'
 import TModalForm from './TModalForm.vue'
 import { useTaskStore } from '@/stores/taskStore'
 import { onMounted } from 'vue'
-import { watch } from 'vue'
-import { reactive } from 'vue'
 
 const taskStore = useTaskStore()
-const { tasks, loading, error, fetchTasks, addNewTask, updateTask, deleteTask } = taskStore
-
-// const toDOList = ref(tasks)
-console.log(tasks)
-
+console.log(taskStore.tasks)
+const tasks = ref(taskStore.tasks)
 // watch(
 //   () => tasks,
 //   (newTasks) => {
@@ -33,46 +28,46 @@ function openModal() {
 function closeModal() {
   isOpen.value = false
 }
-// function handleAddTask() {
-//   openModal()
-//   selectedTask.value = null
-// }
-// function handleDelete(taskId) {
-//   const index = toDOList.value.findIndex((task) => task.id === taskId)
-//   if (index !== -1) {
-//     toDOList.value.splice(index, 1)
-//   }
+function handleAddTask() {
+  openModal()
+  selectedTask.value = null
+}
+function handleDelete(taskId) {
+  const index = toDOList.value.findIndex((task) => task.id === taskId)
+  if (index !== -1) {
+    toDOList.value.splice(index, 1)
+  }
 
-//   deleteTask(taskId)
-// }
-// function handleLike(taskId) {
-//   const index = toDOList.value.findIndex((task) => task.id === taskId)
-//   if (index !== -1) {
-//     toDOList.value[index].isLiked = !toDOList.value[index].isLiked
-//   }
-// }
-// function handleComplete(taskId) {
-//   const index = toDOList.value.findIndex((task) => task.id === taskId)
-//   if (index !== -1) {
-//     toDOList.value[index].isDone = !toDOList.value[index].isDone
-//   }
-// }
-// function handleEdit(task) {
-//   openModal()
-//   selectedTask.value = task
-// }
-// function handleSave(task) {
-//   console.log(task)
-//   if (selectedTask.value) {
-//     const index = toDOList.value.findIndex((t) => t.id === selectedTask.value.id)
-//     if (index !== -1) {
-//       toDOList.value[index] = { ...task, id: selectedTask.value.id }
-//     }
-//   } else {
-//     toDOList.value.push({ ...task, id: toDOList.value.length + 1 })
-//   }
-//   closeModal()
-// }
+  deleteTask(taskId)
+}
+function handleLike(taskId) {
+  const index = toDOList.value.findIndex((task) => task.id === taskId)
+  if (index !== -1) {
+    toDOList.value[index].isLiked = !toDOList.value[index].isLiked
+  }
+}
+function handleComplete(taskId) {
+  const index = toDOList.value.findIndex((task) => task.id === taskId)
+  if (index !== -1) {
+    toDOList.value[index].isDone = !toDOList.value[index].isDone
+  }
+}
+function handleEdit(task) {
+  openModal()
+  selectedTask.value = task
+}
+function handleSave(task) {
+  console.log(task)
+  if (selectedTask.value) {
+    const index = toDOList.value.findIndex((t) => t.id === selectedTask.value.id)
+    if (index !== -1) {
+      toDOList.value[index] = { ...task, id: selectedTask.value.id }
+    }
+  } else {
+    toDOList.value.push({ ...task, id: toDOList.value.length + 1 })
+  }
+  closeModal()
+}
 </script>
 
 <template>
