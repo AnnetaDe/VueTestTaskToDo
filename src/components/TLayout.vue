@@ -1,7 +1,6 @@
 <template>
   <header>
     <nav>
-      <router-link to="/tasks">Tasks</router-link>
       <router-link to="/favorite">Favorite</router-link>
       <router-link to="/done">Done</router-link>
     </nav>

@@ -1,0 +1,15 @@
+@import './mixin.scss';
+@import './reset.scss';
+
+$font-stack: Montserrat, sans-serif;
+$primary-color: #333;
+$desktop: 1200px;
+$mobile: 768px;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+button {
+  @include rounded-corners(10px);
+}

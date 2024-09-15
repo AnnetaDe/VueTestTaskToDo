@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import { watch, onMounted } from 'vue'
 import TButton from './TButton.vue'
-const emit = defineEmits(['save'])
+const emit = defineEmits(['close'])
 const props = defineProps({
   task: {
     type: Object,
@@ -10,6 +10,7 @@ const props = defineProps({
   }
 })
 const form = reactive({
+  id: '',
   name: '',
   description: '',
   isDone: false,
@@ -17,6 +18,7 @@ const form = reactive({
 })
 onMounted(() => {
   if (props.task) {
+    form.id = props.task.id
     form.name = props.task.name
     form.description = props.task.description
   }
@@ -42,12 +44,14 @@ watch(
         required
       />
       <label for="description">Description </label>
-      <input
+      <textarea
         id="description"
         type="textarea"
+        rows="4"
         v-model="form.description"
         :placeholder="form.description ? `${form.description}` : 'Enter description'"
-      />
+      >
+      </textarea>
       <TButton>submit</TButton>
     </div>
   </form>
@@ -64,6 +68,11 @@ watch(
   justify-content: center;
 }
 input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+textarea {
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
