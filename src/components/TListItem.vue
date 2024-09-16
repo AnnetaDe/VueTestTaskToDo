@@ -1,13 +1,7 @@
 <script setup>
 import TButton from './TButton.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import {
-  faTrash,
-  faEdit,
-  faHeart,
-  faHeartBroken,
-  faCheckCircle
-} from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faEdit, faHeart, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 const props = defineProps({
   task: {
@@ -39,10 +33,10 @@ function openModalEdit() {
 <template>
   <li class="tlistItem">
     <div class="btnLikeDone">
-      <TButton @click="completeTask" class="controlsBtn" :class="{ done: task.isDone }"
+      <TButton @click="completeTask" class="controlsBtn" :class="{ done: task.isdone }"
         ><FontAwesomeIcon :icon="faCheckCircle"
       /></TButton>
-      <TButton @click="likeTask" class="controlsBtn" :class="{ liked: task.isLiked }"
+      <TButton @click="likeTask" class="controlsBtn" :class="{ liked: task.isliked }"
         ><FontAwesomeIcon :icon="faHeart"
       /></TButton>
     </div>

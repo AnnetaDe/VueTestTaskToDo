@@ -2,6 +2,7 @@ import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { addTask, updateTask, deleteTask, getTasks } from '../api/taskApi'
 import { tasksApi } from '@/api/config'
+import { debounce } from 'lodash'
 
 export const useTaskStore = defineStore('taskStore', {
   state: () => ({
@@ -12,45 +13,39 @@ export const useTaskStore = defineStore('taskStore', {
     singleTask: ref({}),
     error: null,
     loading: false,
-    sortAsc: ref('asc')
+    sortAsc: ref('asc'),
+    currentPage: ref(1),
+    perPage: 8
   }),
   getters: {
     filteredTasks(state) {
-      if (state.filter === 'all') {
-        return state.tasks
-      }
+      let filtered = state.tasks
       if (state.filter === 'done') {
-        return state.tasks.filter((task) => task.isDone)
+        filtered = state.tasks.filter((task) => task.isdone)
+      } else if (state.filter === 'favorite') {
+        filtered = state.tasks.filter((task) => task.isliked)
       }
-      if (state.filter === 'favorite') {
-        return state.tasks.filter((task) => task.isLiked)
-      }
-      return state.tasks
+      return filtered
     },
-    sortedTasks(state) {
-      if (state.sortAsc === 'asc') {
-        return this.filteredTasks.sort((a, b) => {
-          if (a.deadLine === null) {
-            return 1
-          }
-          if (b.deadLine === null) {
-            return -1
-          }
-          return new Date(a.deadLine).getTime() - new Date(b.deadLine).getTime()
-        })
-      }
-      if (state.sortAsc === 'desc') {
-        return this.filteredTasks.sort((a, b) => {
-          if (a.deadLine === null) {
-            return 1
-          }
-          if (b.deadLine === null) {
-            return -1
-          }
-
-          return new Date(b.deadLine).getTime() - new Date(a.deadLine).getTime()
-        })
-      }
+    sortedFilteredTasks(state) {
+      const sorted = [...this.filteredTasks].sort((a, b) => {
+        if (!a.deadLine) return 1
+        if (!b.deadLine) return -1
+        const dateA = new Date(a.deadLine).getTime()
+        const dateB = new Date(b.deadLine).getTime()
+        return state.sortAsc === 'asc' ? dateA - dateB : dateB - dateA
+      })
+      return sorted
+    },
+    paginatedTasks(state) {
+      const filteredSortedTasks = this.sortedFilteredTasks
+      const start = (state.currentPage - 1) * state.perPage
+      const end = start + state.perPage
+      return filteredSortedTasks.slice(start, end)
+    },
+    totalPages(state) {
+      const total = Math.ceil(this.sortedFilteredTasks.length / state.perPage)
+      return total
     }
   },
 
@@ -106,10 +101,18 @@ export const useTaskStore = defineStore('taskStore', {
       }
     },
     setFilter(f) {
-      this.filter = f
+      ;(this.filter = f), (this.currentPage = 1)
     },
-    setSorting() {
+    setSorting: debounce(function () {
       this.sortAsc = this.sortAsc === 'asc' ? 'desc' : 'asc'
+    }, 200),
+    setCurrentPage(page) {
+      this.currentPage = page
+    },
+    loadMoreTasks() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage += 1
+      }
     }
   },
   persist: {
@@ -118,7 +121,7 @@ export const useTaskStore = defineStore('taskStore', {
       {
         key: 'taskStore',
         storage: localStorage,
-        paths: ['tasks', 'filter']
+        paths: ['tasks']
       }
     ]
   }

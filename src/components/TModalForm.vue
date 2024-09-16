@@ -13,8 +13,8 @@ const form = reactive({
   id: '',
   name: '',
   description: '',
-  isDone: false,
-  isLiked: false
+  isdone: false,
+  isliked: false
 })
 onMounted(() => {
   if (props.task) {

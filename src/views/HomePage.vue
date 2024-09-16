@@ -9,27 +9,13 @@ import { storeToRefs } from 'pinia'
 import { faHashtag, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useRoute } from 'vue-router'
-const route = useRoute()
 
-// const filter = computed(() => {
-//   return route.params.filter
-// })
-
-const { tasks } = storeToRefs(useTaskStore())
-const { filteredTasks } = storeToRefs(useTaskStore())
-
+const { tasks, filteredTasks, sortedFilteredTasks } = storeToRefs(useTaskStore())
+console.log('tasks', tasks, filteredTasks, sortedFilteredTasks)
 const taskStore = useTaskStore()
 
 const isOpen = ref(false)
 const selectedTask = ref(null)
-
-watch(
-  () => route.query.filter,
-  (newFilter) => {
-    taskStore.setFilter(newFilter || 'all')
-  },
-  { immediate: true }
-)
 
 function openModal() {
   isOpen.value = true
@@ -44,14 +30,14 @@ function handleAddTask() {
 function handleLike(task) {
   const index = tasks.value.findIndex((t) => t.id === task.id)
   if (index !== -1) {
-    tasks.value[index].isLiked = !tasks.value[index].isLiked
+    tasks.value[index].isliked = !tasks.value[index].isliked
     taskStore.piniaSaveTask(task)
   }
 }
 function handleComplete(task) {
   const index = tasks.value.findIndex((t) => t.id === task.id)
   if (index !== -1) {
-    tasks.value[index].isDone = !tasks.value[index].isDone
+    tasks.value[index].isdone = !tasks.value[index].isdone
     taskStore.piniaSaveTask(task)
   }
 }
@@ -72,7 +58,7 @@ function toggleToSort() {
 </script>
 
 <template>
-  <div>
+  <!-- <div>
     <RouterLink :to="{ path: '/', query: { filter: 'all' } }" active-class="active"
       ><FontAwesomeIcon :icon="faHashtag" />ALL
     </RouterLink>
@@ -82,7 +68,7 @@ function toggleToSort() {
     <RouterLink :to="{ path: '/', query: { filter: 'done' } }" active-class="active"
       ><FontAwesomeIcon :icon="faHashtag" /> DONE</RouterLink
     >
-  </div>
+  </div> -->
   <div class="tfilter">
     <TButton @click="toggleToSort"
       ><FontAwesomeIcon :icon="faArrowUp" /><FontAwesomeIcon :icon="faArrowDown" /> Sort
@@ -94,7 +80,7 @@ function toggleToSort() {
         v-for="task in filteredTasks"
         :key="task.id"
         :task="task"
-        :class="{ liked: task.isLiked, done: task.isDone }"
+        :class="{ liked: task.isliked, done: task.isdone }"
         @delete="taskStore.piniaDeleteTask"
         @complete="handleComplete"
         @like="handleLike"
