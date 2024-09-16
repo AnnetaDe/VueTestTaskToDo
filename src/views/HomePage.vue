@@ -1,18 +1,35 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import TListItem from '../components/TListItem.vue'
 import TButton from '../components/TButton.vue'
 import TModal from '../components/TModal.vue'
 import TModalForm from '../components/TModalForm.vue'
 import { useTaskStore } from '@/stores/useTaskStore'
 import { storeToRefs } from 'pinia'
+import { faHashtag, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+// const filter = computed(() => {
+//   return route.params.filter
+// })
+
 const { tasks } = storeToRefs(useTaskStore())
 const { filteredTasks } = storeToRefs(useTaskStore())
-console.log(filteredTasks)
+
 const taskStore = useTaskStore()
 
 const isOpen = ref(false)
 const selectedTask = ref(null)
+
+watch(
+  () => route.query.filter,
+  (newFilter) => {
+    taskStore.setFilter(newFilter || 'all')
+  },
+  { immediate: true }
+)
 
 function openModal() {
   isOpen.value = true
@@ -47,11 +64,29 @@ function handleSave(task) {
   taskStore.piniaSaveTask(task)
   closeModal()
 }
+
+function toggleToSort() {
+  console.log('toggleToSort')
+  taskStore.setSorting()
+}
 </script>
 
 <template>
   <div>
-    <h2>Filter</h2>
+    <RouterLink :to="{ path: '/', query: { filter: 'all' } }" active-class="active"
+      ><FontAwesomeIcon :icon="faHashtag" />ALL
+    </RouterLink>
+    <RouterLink :to="{ path: '/', query: { filter: 'favorite' } }" active-class="active"
+      ><FontAwesomeIcon :icon="faHashtag" /> LIKED</RouterLink
+    >
+    <RouterLink :to="{ path: '/', query: { filter: 'done' } }" active-class="active"
+      ><FontAwesomeIcon :icon="faHashtag" /> DONE</RouterLink
+    >
+  </div>
+  <div class="tfilter">
+    <TButton @click="toggleToSort"
+      ><FontAwesomeIcon :icon="faArrowUp" /><FontAwesomeIcon :icon="faArrowDown" /> Sort
+    </TButton>
   </div>
   <div class="listWrapper">
     <ul class="tlist">
@@ -85,5 +120,29 @@ function handleSave(task) {
   gap: 10px;
   grid-template-columns: repeat(4, 1fr);
   font-family: $font-stack;
+}
+.tfilter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  button {
+    background-color: #aa9d9d;
+    padding: 8px 16px;
+    border-radius: 5px;
+  }
+}
+a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 10px;
+}
+
+a:hover,
+a.router-link-active {
+  color: #b012ad;
+}
+.active {
+  color: #aa9d9d;
 }
 </style>

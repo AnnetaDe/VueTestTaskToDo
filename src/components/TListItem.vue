@@ -1,5 +1,13 @@
 <script setup>
 import TButton from './TButton.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {
+  faTrash,
+  faEdit,
+  faHeart,
+  faHeartBroken,
+  faCheckCircle
+} from '@fortawesome/free-solid-svg-icons'
 
 const props = defineProps({
   task: {
@@ -11,6 +19,8 @@ const props = defineProps({
   }
 })
 const date = new Date(props.task.createdAt).toLocaleDateString()
+
+const deadLine = new Date(props.task.deadLine).toLocaleDateString()
 const emit = defineEmits(['delete', 'like', 'complete', 'editModal'])
 
 function deleteTask() {
@@ -28,22 +38,27 @@ function openModalEdit() {
 </script>
 <template>
   <li class="tlistItem">
-    <p class="tdate">{{ date }}</p>
+    <div class="btnLikeDone">
+      <TButton @click="completeTask" class="controlsBtn" :class="{ done: task.isDone }"
+        ><FontAwesomeIcon :icon="faCheckCircle"
+      /></TButton>
+      <TButton @click="likeTask" class="controlsBtn" :class="{ liked: task.isLiked }"
+        ><FontAwesomeIcon :icon="faHeart"
+      /></TButton>
+    </div>
+    <div class="dateWrapper">
+      <p class="tdate">{{ date }}</p>
+      <p class="tdeadline">Deadline: {{ deadLine }}</p>
+    </div>
     <div class="titemwrapper">
-      <div class="btnLikeDone">
-        <TButton @click="completeTask" :class="{ done: task.isDone }">{{
-          task.isDone ? 'DONE' : 'mark done'
-        }}</TButton>
-        <TButton @click="likeTask" :class="{ liked: task.isLiked }">{{
-          task.isLiked ? 'LIKED' : ' like me'
-        }}</TButton>
-      </div>
       <h3 class="titemtitle">{{ task.name }}</h3>
       <p class="tdescr">description: {{ task.description }}</p>
     </div>
     <div class="btnEditDel">
-      <TButton class="controlsBtn" @click="openModalEdit">Edit</TButton>
-      <TButton class="controlsBtn" @click="deleteTask">Delete</TButton>
+      <TButton class="controlsBtn" @click="openModalEdit"
+        ><FontAwesomeIcon :icon="faEdit"
+      /></TButton>
+      <TButton class="controlsBtn" @click="deleteTask"><FontAwesomeIcon :icon="faTrash" /></TButton>
     </div>
   </li>
 </template>
@@ -58,7 +73,12 @@ function openModalEdit() {
   flex-direction: column;
   max-width: 300px;
 }
-.tdate {
+.dateWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.tdate,
+.tdeadline {
   font-size: 0.8rem;
   color: #554040;
 }
@@ -66,38 +86,44 @@ function openModalEdit() {
   background-color: #167995;
 }
 .titemwrapper {
-  background-color: #554040;
-  padding: 0.5rem;
   height: 100%;
 }
 .btnEditDel {
-  margin-top: 1rem;
+  padding: 0.5rem 0;
   margin: auto 0;
   display: flex;
   gap: 0.8rem;
+  .controlsBtn {
+    border: #55404086 solid 1px;
+    color: #f6f5f5;
+    padding: 16px;
+    background-color: #55404086;
+  }
 }
-.controlsBtn {
-  background-color: #55404086;
-  color: #f6f5f5;
-  width: 5rem;
-  padding: 12px 18px;
+.btnLikeDone {
+  padding: 0.5rem 0;
+  display: flex;
+  gap: 10px;
+  .controlsBtn {
+    border: #55404086 solid 1px;
+    color: #f6f5f5;
+    padding: 16px;
+    background-color: #55404086;
+  }
+}
+
+.controlsBtn.done {
+  background-color: #0e707b;
+}
+
+.controlsBtn.liked {
+  background-color: red;
 }
 
 .controlsBtn:hover {
   background-color: #554040;
 }
 
-.btnLikeDone {
-  display: flex;
-  gap: 10px;
-  margin: 0.5rem 0;
-  .liked {
-    background-color: #07ac20;
-  }
-  .done {
-    background-color: #1d199b;
-  }
-}
 .tdescr {
   font-size: 0.8rem;
 }

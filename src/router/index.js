@@ -4,9 +4,12 @@ const HomePage = () => import('../views/HomePage.vue')
 const FavoritePage = () => import('../views/FavoritePage.vue')
 const DonePage = () => import('../views/DonePage.vue')
 const routes = [
-  { path: '/', component: HomePage },
-  { path: '/favorite', component: FavoritePage },
-  { path: '/done', component: DonePage }
+  {
+    path: '/',
+    name: 'HomePage',
+    component: HomePage,
+    props: (route) => ({ filter: route.query.filter })
+  }
 ]
 
 export const router = createRouter({

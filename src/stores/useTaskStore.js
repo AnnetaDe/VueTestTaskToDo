@@ -8,23 +8,48 @@ export const useTaskStore = defineStore('taskStore', {
     /** @type {{ name: string, description:string, id: number, isFinished:boolean, isLiked:boolean }[]} */
     tasks: ref([]),
     //**@type {{'all' | 'done' | 'favorite'}} */
-    filter: 'all',
+    filter: ref('all'),
     singleTask: ref({}),
     error: null,
-    loading: false
+    loading: false,
+    sortAsc: ref('asc')
   }),
   getters: {
-    doneTasks: (state) => state.tasks.filter((task) => task.isFinished),
-    favoriteTasks: (state) => state.tasks.filter((task) => task.isLiked),
-    filteredTasks: (state, getters) => {
-      switch (state.filter) {
-        case 'done':
-          return getters.doneTasks
-        case 'favorite':
-          return getters.favoriteTasks
-        case 'all':
-        default:
-          return state.tasks
+    filteredTasks(state) {
+      if (state.filter === 'all') {
+        return state.tasks
+      }
+      if (state.filter === 'done') {
+        return state.tasks.filter((task) => task.isDone)
+      }
+      if (state.filter === 'favorite') {
+        return state.tasks.filter((task) => task.isLiked)
+      }
+      return state.tasks
+    },
+    sortedTasks(state) {
+      if (state.sortAsc === 'asc') {
+        return this.filteredTasks.sort((a, b) => {
+          if (a.deadLine === null) {
+            return 1
+          }
+          if (b.deadLine === null) {
+            return -1
+          }
+          return new Date(a.deadLine).getTime() - new Date(b.deadLine).getTime()
+        })
+      }
+      if (state.sortAsc === 'desc') {
+        return this.filteredTasks.sort((a, b) => {
+          if (a.deadLine === null) {
+            return 1
+          }
+          if (b.deadLine === null) {
+            return -1
+          }
+
+          return new Date(b.deadLine).getTime() - new Date(a.deadLine).getTime()
+        })
       }
     }
   },
@@ -80,13 +105,15 @@ export const useTaskStore = defineStore('taskStore', {
         this.loading = false
       }
     },
-    setFilter(filter) {
-      this.filter = filter
+    setFilter(f) {
+      this.filter = f
+    },
+    setSorting() {
+      this.sortAsc = this.sortAsc === 'asc' ? 'desc' : 'asc'
     }
   },
   persist: {
     enabled: true,
-
     strategies: [
       {
         key: 'taskStore',
