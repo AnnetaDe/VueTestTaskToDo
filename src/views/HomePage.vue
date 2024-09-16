@@ -77,7 +77,7 @@ function toggleToSort() {
   <div class="listWrapper">
     <ul class="tlist">
       <TListItem
-        v-for="task in filteredTasks"
+        v-for="task in sortedFilteredTasks"
         :key="task.id"
         :task="task"
         :class="{ liked: task.isliked, done: task.isdone }"
