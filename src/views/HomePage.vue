@@ -80,7 +80,7 @@ function loadMore() {
         @editModal="handleEdit"
       />
     </ul>
-    <TButton @click="loadMore">Load More</TButton>
+    <TButton v-if="taskStore.canLoadMore" @click="loadMore">Load More</TButton>
   </div>
   <TModal v-if="isOpen" @close="closeModal">
     <TModalForm @save="handleSave" :task="selectedTask" />

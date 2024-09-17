@@ -47,6 +47,9 @@ export const useTaskStore = defineStore('taskStore', {
     totalPages(state) {
       const total = Math.ceil(this.sortedFilteredTasks.length / state.perPage)
       return total
+    },
+    canLoadMore(state) {
+      return state.currentPage < this.totalPages
     }
   },
 
