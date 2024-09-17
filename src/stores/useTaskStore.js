@@ -39,8 +39,9 @@ export const useTaskStore = defineStore('taskStore', {
     },
     paginatedTasks(state) {
       const filteredSortedTasks = this.sortedFilteredTasks
-      const start = (state.currentPage - 1) * state.perPage
-      const end = start + state.perPage
+      const start = 0
+      const end = state.perPage * state.currentPage
+      console.log('start', start, 'end', end)
       return filteredSortedTasks.slice(start, end)
     },
     totalPages(state) {
@@ -111,6 +112,7 @@ export const useTaskStore = defineStore('taskStore', {
     },
     loadMoreTasks() {
       if (this.currentPage < this.totalPages) {
+        console.log('load more', this.totalPages, this.currentPage)
         this.currentPage += 1
       }
     }

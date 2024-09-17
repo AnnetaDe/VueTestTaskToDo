@@ -3,9 +3,10 @@ import { tasksApi } from './config'
 
 export const getTasks = async () => {
   try {
-    const { data } = await tasksApi.get('/todo')
-    console.log(data)
-    return data
+    const response = await tasksApi.get('/todo')
+    console.log(response)
+
+    return response.data
   } catch (error) {
     console.error(error)
   }

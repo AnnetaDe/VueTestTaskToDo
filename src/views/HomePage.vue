@@ -10,7 +10,7 @@ import { faHashtag, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useRoute } from 'vue-router'
 
-const { tasks, filteredTasks, sortedFilteredTasks } = storeToRefs(useTaskStore())
+const { tasks, filteredTasks, sortedFilteredTasks, paginatedTasks } = storeToRefs(useTaskStore())
 console.log('tasks', tasks, filteredTasks, sortedFilteredTasks)
 const taskStore = useTaskStore()
 
@@ -55,21 +55,14 @@ function toggleToSort() {
   console.log('toggleToSort')
   taskStore.setSorting()
 }
+function loadMore() {
+  taskStore.loadMoreTasks()
+}
 </script>
 
 <template>
-  <!-- <div>
-    <RouterLink :to="{ path: '/', query: { filter: 'all' } }" active-class="active"
-      ><FontAwesomeIcon :icon="faHashtag" />ALL
-    </RouterLink>
-    <RouterLink :to="{ path: '/', query: { filter: 'favorite' } }" active-class="active"
-      ><FontAwesomeIcon :icon="faHashtag" /> LIKED</RouterLink
-    >
-    <RouterLink :to="{ path: '/', query: { filter: 'done' } }" active-class="active"
-      ><FontAwesomeIcon :icon="faHashtag" /> DONE</RouterLink
-    >
-  </div> -->
   <div class="tfilter">
+    <TButton @click="handleAddTask">Add New Task</TButton>
     <TButton @click="toggleToSort"
       ><FontAwesomeIcon :icon="faArrowUp" /><FontAwesomeIcon :icon="faArrowDown" /> Sort
     </TButton>
@@ -77,7 +70,7 @@ function toggleToSort() {
   <div class="listWrapper">
     <ul class="tlist">
       <TListItem
-        v-for="task in sortedFilteredTasks"
+        v-for="task in paginatedTasks"
         :key="task.id"
         :task="task"
         :class="{ liked: task.isliked, done: task.isdone }"
@@ -87,8 +80,8 @@ function toggleToSort() {
         @editModal="handleEdit"
       />
     </ul>
+    <TButton @click="loadMore">Load More</TButton>
   </div>
-  <TButton @click="handleAddTask">Add New Task</TButton>
   <TModal v-if="isOpen" @close="closeModal">
     <TModalForm @save="handleSave" :task="selectedTask" />
   </TModal>
