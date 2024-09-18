@@ -32,27 +32,30 @@ function openModalEdit() {
 </script>
 <template>
   <li class="tlistItem">
-    <div class="btnLikeDone">
-      <TButton @click="completeTask" class="controlsBtn" :class="{ done: task.isdone }"
-        ><FontAwesomeIcon :icon="faCheckCircle"
-      /></TButton>
-      <TButton @click="likeTask" class="controlsBtn" :class="{ liked: task.isliked }"
-        ><FontAwesomeIcon :icon="faHeart"
-      /></TButton>
-    </div>
     <div class="dateWrapper">
-      <p class="tdate">{{ date }}</p>
       <p class="tdeadline">Deadline: {{ deadLine }}</p>
+      <div class="btnLikeDone">
+        <TButton @click="completeTask" class="controlsBtn" :class="{ done: task.isdone }"
+          ><FontAwesomeIcon :icon="faCheckCircle" size="3x"
+        /></TButton>
+        <TButton @click="likeTask" class="controlsBtn" :class="{ liked: task.isliked }"
+          ><FontAwesomeIcon :icon="faHeart" size="3x"
+        /></TButton>
+      </div>
     </div>
+
+    <h2 class="titemtitle">{{ task.name }}</h2>
+
     <div class="titemwrapper">
-      <h3 class="titemtitle">{{ task.name }}</h3>
       <p class="tdescr">description: {{ task.description }}</p>
     </div>
     <div class="btnEditDel">
       <TButton class="controlsBtn" @click="openModalEdit"
-        ><FontAwesomeIcon :icon="faEdit"
+        ><FontAwesomeIcon :icon="faEdit" size="lg"
       /></TButton>
-      <TButton class="controlsBtn" @click="deleteTask"><FontAwesomeIcon :icon="faTrash" /></TButton>
+      <TButton class="controlsBtn" @click="deleteTask"
+        ><FontAwesomeIcon :icon="faTrash" size="lg"
+      /></TButton>
     </div>
   </li>
 </template>
@@ -83,39 +86,44 @@ function openModalEdit() {
   height: 100%;
 }
 .btnEditDel {
-  padding: 0.5rem 0;
   margin: auto 0;
   display: flex;
   gap: 0.8rem;
   .controlsBtn {
-    border: #55404086 solid 1px;
-    color: #f6f5f5;
-    padding: 16px;
-    background-color: #55404086;
+    padding: 16px 32px;
+    width: 100%;
   }
 }
 .btnLikeDone {
-  padding: 0.5rem 0;
   display: flex;
-  gap: 10px;
+  padding: 8px;
+
   .controlsBtn {
-    border: #55404086 solid 1px;
-    color: #f6f5f5;
     padding: 16px;
-    background-color: #55404086;
+    background-color: #f6f6f6;
   }
 }
 
-.controlsBtn.done {
-  background-color: #0e707b;
+.fa-circle-check,
+.fa-heart {
+  color: #8d8c8c;
 }
 
-.controlsBtn.liked {
-  background-color: red;
+.controlsBtn.done .fa-circle-check {
+  color: #0e707b;
 }
 
-.controlsBtn:hover {
-  background-color: #554040;
+.controlsBtn.liked .fa-heart {
+  color: #b012ad;
+}
+
+.controlsBtn {
+  .fa-heart :hover {
+    color: #b012ad;
+  }
+  .fa-circle-check :hover {
+    color: #0e707b;
+  }
 }
 
 .tdescr {

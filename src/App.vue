@@ -10,12 +10,10 @@ onMounted(() => {
   fetchTasks()
 })
 const route = useRoute()
-console.log('route', route.params)
 
 watch(
   () => route.params.filter,
   (newFilter) => {
-    console.log('newFilter', newFilter)
     setFilter(newFilter || 'all')
   },
   { immediate: true }
@@ -37,7 +35,7 @@ watch(
 .container {
   display: grid;
   width: 1280px;
-  padding: 0 2rem 2rem 2rem;
-  background-color: #953232;
+  // padding: 0 3rem 1rem 2rem;
+  background-color: $dark-color;
 }
 </style>

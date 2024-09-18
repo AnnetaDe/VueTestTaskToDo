@@ -1,4 +1,4 @@
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { addTask, updateTask, deleteTask, getTasks } from '../api/taskApi'
 import { tasksApi } from '@/api/config'
@@ -17,13 +17,25 @@ export const useTaskStore = defineStore('taskStore', {
     currentPage: ref(1),
     perPage: 8
   }),
+
   getters: {
     filteredTasks(state) {
       let filtered = state.tasks
-      if (state.filter === 'done') {
+      if (state.filter === 'all') {
+        filtered = state.tasks
+        filtered.forEach((task) => {
+          task.list = 'all'
+        })
+      } else if (state.filter === 'done') {
         filtered = state.tasks.filter((task) => task.isdone)
+        filtered.forEach((task) => {
+          task.list = 'done'
+        })
       } else if (state.filter === 'favorite') {
         filtered = state.tasks.filter((task) => task.isliked)
+        filtered.forEach((task) => {
+          task.list = 'favorite'
+        })
       }
       return filtered
     },
@@ -41,7 +53,6 @@ export const useTaskStore = defineStore('taskStore', {
       const filteredSortedTasks = this.sortedFilteredTasks
       const start = 0
       const end = state.perPage * state.currentPage
-      console.log('start', start, 'end', end)
       return filteredSortedTasks.slice(start, end)
     },
     totalPages(state) {

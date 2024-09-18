@@ -4,13 +4,11 @@
   <button><slot>Click me</slot></button>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 button {
-  background-color: #953232;
   padding: 8px 10px;
-  border-radius: 5px;
-  border: none;
+  border-radius: 8px;
+
   cursor: pointer;
-  color: #f6f5f5;
 }
 </style>

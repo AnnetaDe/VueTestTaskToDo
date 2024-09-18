@@ -1,17 +1,15 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 import TListItem from '../components/TListItem.vue'
 import TButton from '../components/TButton.vue'
 import TModal from '../components/TModal.vue'
 import TModalForm from '../components/TModalForm.vue'
 import { useTaskStore } from '@/stores/useTaskStore'
 import { storeToRefs } from 'pinia'
-import { faHashtag, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { faArrowUp, faArrowDown, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { useRoute } from 'vue-router'
 
-const { tasks, filteredTasks, sortedFilteredTasks, paginatedTasks } = storeToRefs(useTaskStore())
-console.log('tasks', tasks, filteredTasks, sortedFilteredTasks)
+const { tasks, paginatedTasks } = storeToRefs(useTaskStore())
 const taskStore = useTaskStore()
 
 const isOpen = ref(false)
@@ -61,26 +59,35 @@ function loadMore() {
 </script>
 
 <template>
-  <div class="tfilter">
-    <TButton @click="handleAddTask">Add New Task</TButton>
-    <TButton @click="toggleToSort"
-      ><FontAwesomeIcon :icon="faArrowUp" /><FontAwesomeIcon :icon="faArrowDown" /> Sort
-    </TButton>
-  </div>
-  <div class="listWrapper">
-    <ul class="tlist">
-      <TListItem
-        v-for="task in paginatedTasks"
-        :key="task.id"
-        :task="task"
-        :class="{ liked: task.isliked, done: task.isdone }"
-        @delete="taskStore.piniaDeleteTask"
-        @complete="handleComplete"
-        @like="handleLike"
-        @editModal="handleEdit"
-      />
-    </ul>
-    <TButton v-if="taskStore.canLoadMore" @click="loadMore">Load More</TButton>
+  <div class="tlistContainer">
+    <div class="tfilter">
+      <TButton @click="handleAddTask"
+        ><FontAwesomeIcon :icon="faPlusCircle" size="lg" /> Task</TButton
+      >
+      <TButton @click="toggleToSort"
+        ><FontAwesomeIcon :icon="faArrowUp" size="lg" /><FontAwesomeIcon
+          :icon="faArrowDown"
+          size="lg"
+          swap-opacity
+        />
+        Sort
+      </TButton>
+    </div>
+    <div class="listWrapper">
+      <ul class="tlist">
+        <TListItem
+          v-for="task in paginatedTasks"
+          :key="task.id"
+          :task="task"
+          :class="{ liked: task.isliked, done: task.isdone }"
+          @delete="taskStore.piniaDeleteTask"
+          @complete="handleComplete"
+          @like="handleLike"
+          @editModal="handleEdit"
+        />
+      </ul>
+    </div>
+    <TButton class="loadBtn" v-if="taskStore.canLoadMore" @click="loadMore">Load More</TButton>
   </div>
   <TModal v-if="isOpen" @close="closeModal">
     <TModalForm @save="handleSave" :task="selectedTask" />
@@ -89,26 +96,32 @@ function loadMore() {
 
 <style lang="scss" scoped>
 .listWrapper {
-  background-color: #953232;
+}
+.tlistContainer {
+  padding: 2rem;
 }
 .tlist {
   max-width: 1200px;
-  border-radius: 2px;
-  padding: 10px;
   display: grid;
-  gap: 10px;
+  gap: 1rem;
   grid-template-columns: repeat(4, 1fr);
   font-family: $font-stack;
+  margin-bottom: 1rem;
 }
 .tfilter {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
   button {
-    background-color: #aa9d9d;
     padding: 8px 16px;
     border-radius: 5px;
   }
+}
+
+.loadBtn {
+  background: none;
+  padding: 16px 24px;
+  border: 1px solid $light-color;
 }
 a {
   text-decoration: none;
@@ -116,7 +129,6 @@ a {
   font-weight: 700;
   padding: 10px;
 }
-
 a:hover,
 a.router-link-active {
   color: #b012ad;

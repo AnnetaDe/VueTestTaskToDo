@@ -2,14 +2,23 @@
 @import './reset.scss';
 
 $font-stack: Montserrat, sans-serif;
-$primary-color: #333;
+$gradient-color: linear-gradient(90deg, #050505 0%, #988c9d 100%);
+$light-color: #f5f5f5;
+$acsent-color: #a3d048;
+$dark-color: #090909;
+$border-radius: 8px;
 $desktop: 1200px;
 $mobile: 768px;
 
 body {
-  font: 100% $font-stack;
-  color: $primary-color;
+  background-color: $dark-color;
+  color: $light-color;
+  font-family: $font-stack;
+  border-radius: $border-radius;
 }
 button {
+  background: $dark-color;
   @include rounded-corners(10px);
+  color: $light-color;
+  border: 1px solid $light-color;
 }

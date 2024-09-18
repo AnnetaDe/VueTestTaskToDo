@@ -1,26 +1,35 @@
 <!-- <script setup>
-import { ref } from 'vue'
-import TListItem from './TListItem.vue'
-import TButton from './TButton.vue'
-import TModal from './TModal.vue'
-import TModalForm from './TModalForm.vue'
-import { useTaskStore } from '@/stores/taskStore'
-import { onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
+import TListItem from '../components/TListItem.vue'
+import TButton from '../components/TButton.vue'
+import TModal from '../components/TModal.vue'
+import TModalForm from '../components/TModalForm.vue'
+import { useTaskStore } from '@/stores/useTaskStore'
+import { storeToRefs } from 'pinia'
+import {  faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+const { tasks, paginatedTasks } = storeToRefs(useTaskStore())
 const taskStore = useTaskStore()
-console.log(taskStore.tasks)
-const tasks = ref(taskStore.tasks)
-// watch(
-//   () => tasks,
-//   (newTasks) => {
-//     toDOList.value = newTasks
-//   }
-// )
 
-// addNewTask({ name: 'Task 4', description: 'dosmthing3', isDone: false, isLiked: false })
-// updateTask({ id: 1, name: 'Task 1', description: 'updated', isDone: false, isLiked: false })
 const isOpen = ref(false)
 const selectedTask = ref(null)
+
+const draggableTask = ref(null)
+
+function handleDragStart(task) {
+  draggableTask.value = task
+}
+function handleDragOver(status) {
+  if (status === 'done') {
+    draggableTask.value.isdone = true
+  }
+  if (status === 'liked') {
+    draggableTask.value.isliked = true
+  }
+  taskStore.piniaSaveTask(draggableTask.value)
+  draggableTask.value = null
+}
 
 function openModal() {
   isOpen.value = true
@@ -32,71 +41,97 @@ function handleAddTask() {
   openModal()
   selectedTask.value = null
 }
-function handleDelete(taskId) {
-  const index = toDOList.value.findIndex((task) => task.id === taskId)
+function handleLike(task) {
+  const index = tasks.value.findIndex((t) => t.id === task.id)
   if (index !== -1) {
-    toDOList.value.splice(index, 1)
-  }
-
-  deleteTask(taskId)
-}
-function handleLike(taskId) {
-  const index = toDOList.value.findIndex((task) => task.id === taskId)
-  if (index !== -1) {
-    toDOList.value[index].isLiked = !toDOList.value[index].isLiked
+    tasks.value[index].isliked = !tasks.value[index].isliked
+    taskStore.piniaSaveTask(task)
   }
 }
-function handleComplete(taskId) {
-  const index = toDOList.value.findIndex((task) => task.id === taskId)
+function handleComplete(task) {
+  const index = tasks.value.findIndex((t) => t.id === task.id)
   if (index !== -1) {
-    toDOList.value[index].isDone = !toDOList.value[index].isDone
+    tasks.value[index].isdone = !tasks.value[index].isdone
+    taskStore.piniaSaveTask(task)
   }
 }
-function handleEdit(task) {
-  openModal()
+function handleEdit(taskId) {
+  const task = tasks.value.find((task) => task.id === taskId)
   selectedTask.value = task
+  openModal()
 }
 function handleSave(task) {
-  console.log(task)
-  if (selectedTask.value) {
-    const index = toDOList.value.findIndex((t) => t.id === selectedTask.value.id)
-    if (index !== -1) {
-      toDOList.value[index] = { ...task, id: selectedTask.value.id }
-    }
-  } else {
-    toDOList.value.push({ ...task, id: toDOList.value.length + 1 })
-  }
+  taskStore.piniaSaveTask(task)
   closeModal()
+}
+
+function toggleToSort() {
+  console.log('toggleToSort')
+  taskStore.setSorting()
+}
+function loadMore() {
+  taskStore.loadMoreTasks()
 }
 </script>
 
 <template>
-  <div>
+  <div class="tfilter">
+    <TButton @click="handleAddTask">Add New Task</TButton>
+    <TButton @click="toggleToSort"
+      ><FontAwesomeIcon :icon="faArrowUp" /><FontAwesomeIcon :icon="faArrowDown" /> Sort
+    </TButton>
+  </div>
+  <div class="listWrapper">
     <ul class="tlist">
       <TListItem
-        v-for="task in tasks"
+        v-for="task in paginatedTasks"
         :key="task.id"
         :task="task"
-        @delete="handleDelete"
+        :class="{ liked: task.isliked, done: task.isdone }"
+        @delete="taskStore.piniaDeleteTask"
         @complete="handleComplete"
         @like="handleLike"
         @editModal="handleEdit"
       />
     </ul>
-    <TButton @click="handleAddTask">Add New Task</TButton>
-    <TModal v-if="isOpen" @close="closeModal">
-      <TModalForm @save="handleSave" :task="selectedTask" />
-    </TModal>
+    <TButton v-if="taskStore.canLoadMore" @click="loadMore">Load More</TButton>
   </div>
+  <TModal v-if="isOpen" @close="closeModal">
+    <TModalForm @save="handleSave" :task="selectedTask" />
+  </TModal>
 </template>
 
-<style scoped>
-.tlist {
+<style lang="scss" scoped>
+.listWrapper {
   background-color: #953232;
+}
+.tlist {
+  max-width: 1200px;
   border-radius: 2px;
   padding: 10px;
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  font-family: $font-stack;
+}
+.tfilter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+
+}
+a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 10px;
+}
+
+a:hover,
+a.router-link-active {
+  color: #b012ad;
+}
+.active {
+  color: #aa9d9d;
 }
 </style> -->
